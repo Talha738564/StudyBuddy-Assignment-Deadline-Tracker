@@ -9,3 +9,4 @@ class WrongDeadlineError(StudyBuddyError):
 class InvalidWeight(StudyBuddyError):
     pass
 
+
