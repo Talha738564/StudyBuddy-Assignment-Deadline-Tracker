@@ -6,7 +6,7 @@ from exceptions import (
     InvalidProgress,
     InvalidType,
     TitleError,
-    SubjectNotFound
+    SubjectNotFound,
 )
 from datetime import  date, datetime 
 
@@ -24,7 +24,7 @@ class Assignment(ABC):
 
     @property
     def subject(self):
-        return self.subject
+        return self._subject
     @subject.setter
     def subject(self,value):
         if not isinstance(value, str):
@@ -34,7 +34,7 @@ class Assignment(ABC):
         self._subject=value
     @property
     def title(self):
-        return self.title
+        return self._title
     @title.setter
     def title(self,value):
         if not isinstance(value, str):
@@ -51,16 +51,27 @@ class Assignment(ABC):
             if not isinstance(value, str) or value=="":
                 raise InvalidType(f"deadline  must be a string , got {type(value).__name__}")
             try:
-                deadline_str=value 
+                deadline_str=value.strip() 
                 deadline=datetime.strptime(deadline_str,"%Y-%m-%d").date()
-                self._deadline=deadline
-            except ValueError:
+            except ValueError as e:
                 try: 
                     deadline=datetime.strptime(deadline_str,"%d-%m-%Y").date()
-                    self._deadline=deadline
-                except ValueError :
-                    raise WrongDeadlineError(f"Invalid Format: {deadline_str}") from None
-                
+                except ValueError as e2 :
+                    raise WrongDeadlineError( f"Invalid deadline '{value}'. Use YYYY-MM-DD or DD-MM-YYYY.") from e2
+            if deadline.year<1000:
+                raise WrongDeadlineError(f"Year must be a four digit: {value}")
+            self._deadline=deadline
+            # for fmt in ("%Y-%m-%d", "%d-%m-%Y"):
+            # try:
+            #     self._deadline = datetime.strptime(value, fmt).date()
+            #     return
+            # except ValueError:
+            #     pass
+
+            # raise WrongDeadlineError(
+            #     f"Invalid deadline '{value}'. Use YYYY-MM-DD or DD-MM-YYYY."
+            # )
+                                    
         
 
 
@@ -105,10 +116,41 @@ class Assignment(ABC):
     @abstractmethod
     def calculate_urgency(self):
         pass
+    def deadline_status(self):
+           days_left=(self.deadline-date.today()).days
+           if days_left<0:
+               return f"OverDue by {-days_left} days"
+           elif days_left==0:
+               return f"Due Today"
+           else:
+               return f"due in {days_left} days"
+       
+    def dispaly_summary(self):
+        pass
+    def display_detail(self):
+        return (f"Title: {self.title}\n" 
+            f"Subject: {self.subject}\n"
+            f"Type: {type(self).__name__}\n"
+            f"Deadline: {self.deadline}({self.deadline_status()})\n"
+            f"Urgency: {self.calculate_urgency()}\n"
+            f"Progress: {self.progress}% \n")
+
+
+
 class HomeworkAssignment(Assignment):
-    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress):
+    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress,submission_type):
         super().__init__(title,subject,deadline,priority_weight,estimated_hours,progress)
+        self._submission_type=submission_type
+    @property
+    def submission_type(self):
+        return self._submission_type
+    @submission_type.setter
+    def submission_type(self,value):
+        if not isinstance(value, str):
+            raise InvalidType(f"Subject  must be a string , got {type(value).__name__}")       
+        self._submission_type=value 
     def calculate_urgency(self):
+            
             days_left=(self.deadline - date.today()).days
             if days_left<=0:
                 urgency=float('inf')
@@ -116,12 +158,25 @@ class HomeworkAssignment(Assignment):
                 work_remaining=100-self.progress
                 urgency= self.priority_weight+(work_remaining/days_left)
             return urgency
+    
+    
+    def display_summary(self):
+        return (f"[{self.subject}] {self.title} | {self.submission_type} | {self.deadline_status()}  | Urgency :{self.calculate_urgency()} | {self.progress}% Done")
+    def display_detail(self):
+        base=super().display_detail()
+        return base +f"Submission Type: {self.submission_type}"
+    
 
+
+        
+        
 
     
 class ProjectAssignment(Assignment):
-    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress):
+    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress,milestones,team_members):
         super().__init__(title,subject,deadline,priority_weight,estimated_hours,progress)
+        self._milestones=milestones
+        self._team_members=team_members
     def calculate_urgency(self):
             days_left=(self.deadline - date.today()).days
             if days_left<=0:
@@ -130,6 +185,12 @@ class ProjectAssignment(Assignment):
                 work_remaining=100-self.progress
                 urgency= self.priority_weight+(work_remaining/days_left)*(self.estimated_hours/days_left)
             return urgency
+    def display_summary(self):
+        return (f"[{self.subject}] {self.title} |  {self.deadline_status()}  | Urgency :{self.calculate_urgency()} | {self.progress}% Done | Members: {len(self.team_members)}"  )
+    def display_detail(self):
+        base=super().display_detail()
+        return base+f"Milestones Achieved: {','.join(self.milestones)}\n"+f"Team Members:{",".join(self.team_members)} "
+        
         
 
 
@@ -137,9 +198,10 @@ class ProjectAssignment(Assignment):
 
 
 
-class ExamAssignment(Assignment):
-    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress):
+class ExamPrep(Assignment):
+    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress,important_topics):
         super().__init__(title,subject,deadline,priority_weight,estimated_hours,progress)
+        self._important_topics=important_topics
     def calculate_urgency(self):
             days_left=(self.deadline - date.today()).days
             if days_left<=0:
@@ -147,12 +209,17 @@ class ExamAssignment(Assignment):
             else:
                 urgency= self.priority_weight+(1/days_left)**2
             return urgency
+    def display_summary(self):
+        return (f"[{self.subject}] {self.title} | {self.deadline_status()} | Urgency :{self.calculate_urgency()} | {self.progress}% Done |  Important Topics: {len(self.important_topics)}"  )
+    def display_detail(self):
+        base=super().display_detail()
+        return base+f"Important Topics: {','.join(self.important_topics)}"
+    
+    
+    
 
 
 
-a1=ExamAssignment("Problem Solving and Algorithums","DSA","27-7-2026",70,5,10)
-print(a1.calculate_urgency())
-            
     
 
     
