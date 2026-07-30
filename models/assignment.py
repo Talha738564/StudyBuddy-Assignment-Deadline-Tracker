@@ -214,6 +214,7 @@ class ExamPrep(Assignment):
     def display_detail(self):
         base=super().display_detail()
         return base+f"Important Topics: {','.join(self.important_topics)}"
+        
     
     
     

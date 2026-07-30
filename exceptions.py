@@ -1,6 +1,6 @@
 class StudyBuddyError(Exception):
     pass
-class AssignmentNotExistError(StudyBuddyError):
+class AssignmentNotFound(StudyBuddyError):
         pass
 class SubjectNotFound(StudyBuddyError):
     pass

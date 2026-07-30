@@ -1,29 +1,52 @@
 from models import assignment
+from exceptions import AssignmentNotFound
 
 class Subject():                                        
-    assignment=[]
     def __init__(self,name):
         self.name=name
+        self.assignments=[]
+
 
 
     def add_assignment(self,assignment):
         self.assignments.append(assignment)
+        return
 
+    def remove_assignment(self,title):
+        for assignment in self.assignments:
+            if assignment.title==title:
+                self.assignments.remove(assignment)
+                return
+        raise AssignmentNotFound(f"No assignment Titled:' {title} ' Found!")             
     def view_all_assignments(self):
         for assignment in self.assignments:
-            print(f"Assignment Title :{self.title} \n Assignmnet Subject: {self.subject} \n Assignment Deadline: {self.deadline} ")
-    def delete_assignment(self,title):
-        pass
-        # This assignment needs to be deleted
+            print(assignment.display_detail())
+    def get_pending(self):
+        pendings=[assignment.display_detail() for assignment in self.assignments if assignment.progress<100]            
+        for pending in pendings:
+            print(pending)
+        return            
+    def get_completed(self):
+        completed=(assignment.display_detail() for assignment in self.assignments if assignment.progress==100)            
+        for c in completed:
+            print(c)
+        return                    
+        return completed
+    def update_assignment(self,title,deadline=None,priority_weight=None,estimated_hours=None,progress=None):
+        assignment=next((assignment  for assignment in self.assignments if assignment.title == title),None)
+        if assignment is None:
+            raise AssignmentNotFound(f"No assignment Titled:' {title} ' Found!")             
+        if deadline is not None:
+            assignment.deadline=deadline
+        if priority_weight is not None:
+            assignment.priority_weight=priority_weight
+        if estimated_hours is not None:
+            assignment.estimated_hours=estimated_hours
+        if progress is not None:
+            assignment.progress=progress
+        return assignment            
 
-    def update_assignmet(self,title):
-        update_ass=(assignment  for assignment in self.assignments if assignment.title ==title)
-        assignment.title=input()
-        assignment.subject=input()
-        assignment.deadline=input()
-        assignment.weight=input()
-        assignment.progress=input()
-        # May be the user only wants to change the deadline of the Assignment 
+        
         
 
 
