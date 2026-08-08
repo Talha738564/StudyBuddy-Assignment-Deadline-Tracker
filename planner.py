@@ -33,7 +33,24 @@ class Planner:
         for assignment in self.view_all_assignments:
             if assignment.day_left<=days_left:
                 remainders.append(assignment)
-        return remainders                
+        return remainders
+    def get_statistics(self):
+        all_assignments=self.view_all_assignments()
+        completed=[assignment for assignment in all_assignments if assignment.progress==100 ]
+        pending=[assignment for assignment in all_assignments if assignment.progress<100 ]
+        completion_times = [(a.completed_date - a.created_date).days for a in completed]
+
+        if completion_times:
+            avg_completion_time = sum(completion_times) / len(completion_times)
+        else:
+            avg_completion_time = 0   # or None — your call, see note below
+
+        return {
+            "total": len(all_assignments),
+            "completed": len(completed),
+            "pending": len(pending),
+            "avg_completion_time_days": avg_completion_time,
+        }
 
 
 

@@ -11,13 +11,15 @@ from exceptions import (
 from datetime import  date, datetime 
 
 class Assignment(ABC):
-    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress): 
+    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress,created_date,completed_date): 
         self.title=title
         self.subject=subject
         self.estimated_hours=estimated_hours
         self.priority_weight=priority_weight
         self.progress=progress
         self.deadline=deadline
+        self.created_date=date.today()
+        self.completed_date = None  
 
 
 
@@ -112,6 +114,8 @@ class Assignment(ABC):
             raise InvalidType(f"progress must be a number, got {type(value).__name__}")
         if value < 0 or value > 100:
             raise InvalidProgress("Progress cannot be negative or greater than 100")
+        if value==100:
+            self.completed_date=date.today()
         self._progress=value
 
     @abstractmethod
