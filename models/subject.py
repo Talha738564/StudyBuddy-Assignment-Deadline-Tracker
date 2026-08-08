@@ -1,7 +1,7 @@
 from models import assignment
 from exceptions import AssignmentNotFound
 
-class Subject():                                        
+class Subject:                                        
     def __init__(self,name):
         self.name=name
         self.assignments=[]
@@ -27,7 +27,7 @@ class Subject():
             print(pending)
         return            
     def get_completed(self):
-        completed=(assignment.display_detail() for assignment in self.assignments if assignment.progress==100)            
+        completed=[assignment.display_detail() for assignment in self.assignments if assignment.progress==100]            
         for c in completed:
             print(c)
         return                    
@@ -44,7 +44,9 @@ class Subject():
             assignment.estimated_hours=estimated_hours
         if progress is not None:
             assignment.progress=progress
-        return assignment            
+        return assignment   
+             
+    
 
         
         

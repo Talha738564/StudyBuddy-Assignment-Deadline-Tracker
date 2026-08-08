@@ -16,5 +16,7 @@ class InvalidType(Exception):
     pass
 class TitleError(Exception):
      pass
+class DuplicateAssignmentError:
+     pass
 
 

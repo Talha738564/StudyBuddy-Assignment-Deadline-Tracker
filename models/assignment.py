@@ -75,7 +75,8 @@ class Assignment(ABC):
         
 
 
- 
+    def day_left(self):
+        return (self.deadline - date.today()).days
     @property
     def priority_weight(self):
         return self._priority_weight
@@ -117,7 +118,7 @@ class Assignment(ABC):
     def calculate_urgency(self):
         pass
     def deadline_status(self):
-           days_left=(self.deadline-date.today()).days
+           days_left=self.day_left()
            if days_left<0:
                return f"OverDue by {-days_left} days"
            elif days_left==0:
@@ -151,7 +152,7 @@ class HomeworkAssignment(Assignment):
         self._submission_type=value 
     def calculate_urgency(self):
             
-            days_left=(self.deadline - date.today()).days
+            days_left=self.day_left()
             if days_left<=0:
                 urgency=float('inf')
             else:
@@ -178,7 +179,7 @@ class ProjectAssignment(Assignment):
         self._milestones=milestones
         self._team_members=team_members
     def calculate_urgency(self):
-            days_left=(self.deadline - date.today()).days
+            days_left=self.day_left()
             if days_left<=0:
                 urgency=float('inf')
             else:
@@ -203,7 +204,7 @@ class ExamPrep(Assignment):
         super().__init__(title,subject,deadline,priority_weight,estimated_hours,progress)
         self._important_topics=important_topics
     def calculate_urgency(self):
-            days_left=(self.deadline - date.today()).days
+            days_left=self.day_left()
             if days_left<=0:
                 urgency=float('inf')
             else:
