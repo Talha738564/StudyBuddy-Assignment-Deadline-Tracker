@@ -30,10 +30,23 @@ class Planner:
         return all_sorted[:n]
     def get_remainder(self,days_left=2):
         remainders=[]
-        for assignment in self.view_all_assignments:
-            if assignment.day_left<=days_left:
+        for assignment in self.view_all_assignments():
+            if assignment.day_left()<=days_left:
                 remainders.append(assignment)
         return remainders
+    
+    def subject_completetion_rates(self):
+        rates={}
+        for name,subject in self.subjects.items():
+            total=len(subject.assignments)
+            completed=len([ assignment for assignment in subject.assignments if assignment.progress==100])                      
+            if total>0:
+                rates[name]=completed/total*100
+        return rates
+    
+    
+                    
+
     def get_statistics(self):
         all_assignments=self.view_all_assignments()
         completed=[assignment for assignment in all_assignments if assignment.progress==100 ]
@@ -41,16 +54,31 @@ class Planner:
         completion_times = [(a.completed_date - a.created_date).days for a in completed]
 
         if completion_times:
-            avg_completion_time = sum(completion_times) / len(completion_times)
+            avg_completion_time = sum(completion_times)/len(completion_times)
         else:
-            avg_completion_time = 0   # or None — your call, see note below
-
+            avg_completion_time = 0
         return {
             "total": len(all_assignments),
             "completed": len(completed),
             "pending": len(pending),
             "avg_completion_time_days": avg_completion_time,
+            "completion_rates": self.subject_completion_rates(),
         }
+    def export_report(self):
+        with open("reports/study_report.txt","w") as f:
+            for assignment in self.view_all_assignments():
+                f.write(assignment.display_detail())
+                f.write("-" * 40 + "\n")
+            f.write("<<<<<<<<-------Statistics------->>>>>>>>>"+"\n")
+            for key,value in self.get_statistics().items():
+                f.write(f"{key} : {value}\n")
+
+
+
+    
+
+    
+    
 
 
 
