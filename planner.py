@@ -62,7 +62,7 @@ class Planner:
             "completed": len(completed),
             "pending": len(pending),
             "avg_completion_time_days": avg_completion_time,
-            "completion_rates": self.subject_completion_rates(),
+            "completion_rates": self.subject_completetion_rates(),
         }
     def export_report(self):
         with open("reports/study_report.txt","w") as f:
@@ -72,7 +72,6 @@ class Planner:
             f.write("<<<<<<<<-------Statistics------->>>>>>>>>"+"\n")
             for key,value in self.get_statistics().items():
                 f.write(f"{key} : {value}\n")
-
 
 
     

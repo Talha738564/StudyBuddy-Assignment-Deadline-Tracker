@@ -139,6 +139,21 @@ class Assignment(ABC):
             f"Deadline: {self.deadline}({self.deadline_status()})\n"
             f"Urgency: {self.calculate_urgency()}\n"
             f"Progress: {self.progress}% \n")
+    def to_dict(self):
+        return {
+            "Title": self.title, 
+            "Subject": self.subject,
+            "Type": type(self).__name__,
+            "Deadline":  self.deadline.isoformat(),
+            "Urgency": self.calculate_urgency(),
+            "Progress": self.progress,
+            "created_date":self.created_date.isoformat(),
+            "completed_date": self.completed_date.isoformat() if self.progress==100 else None 
+        }
+    
+         
+
+
 
 
 
@@ -170,6 +185,10 @@ class HomeworkAssignment(Assignment):
     def display_detail(self):
         base=super().display_detail()
         return base +f"Submission Type: {self.submission_type}"
+    def to_dict(self):
+        base=super().to_dict()
+        base["Submission Tpe"]=self.submission_type
+        return base
     
 
 
@@ -195,6 +214,10 @@ class ProjectAssignment(Assignment):
     def display_detail(self):
         base=super().display_detail()
         return base+f"Milestones Achieved: {','.join(self.milestones)}\n"+f"Team Members:{",".join(self.team_members)} "
+    def to_dict(self):
+        base=super().to_dict()
+        base["Milestones"]=self._milestones
+        base["Team Member"]=self._team_members
         
         
 
@@ -219,6 +242,9 @@ class ExamPrep(Assignment):
     def display_detail(self):
         base=super().display_detail()
         return base+f"Important Topics: {','.join(self.important_topics)}"
+    def to_dict(self):
+        base=super().to_dict()
+        base["Important Topics"]=self._important_topics
         
     
     
