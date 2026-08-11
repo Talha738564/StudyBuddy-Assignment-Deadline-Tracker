@@ -28,12 +28,12 @@ class Planner:
     def focus_list(self,n=5):
         all_sorted=self.view_all_assignments()
         return all_sorted[:n]
-    def get_remainder(self,days_left=2):
-        remainders=[]
+    def get_reminder(self,days_left=2):
+        reminders=[]
         for assignment in self.view_all_assignments():
             if assignment.day_left()<=days_left:
-                remainders.append(assignment)
-        return remainders
+                reminders.append(assignment)
+        return reminders
     
     def subject_completetion_rates(self):
         rates={}
@@ -72,6 +72,8 @@ class Planner:
             f.write("<<<<<<<<-------Statistics------->>>>>>>>>"+"\n")
             for key,value in self.get_statistics().items():
                 f.write(f"{key} : {value}\n")
+
+
 
 
     
