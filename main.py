@@ -10,6 +10,7 @@ from exceptions import (
     AssignmentNotFound
 )
 from models.assignment import HomeworkAssignment, ProjectAssignment, ExamPrep
+from file_manager import FileManager
 
 
 
@@ -112,7 +113,10 @@ def handle_report(planner):
 
 def main():
     planner = Planner()
-    # planner = load_data()   
+    loaded_assignments=FileManager.load_assignments() 
+    for a in loaded_assignments:
+        planner.add_assignment(a)
+
 
     while True:
         print_menu()
@@ -136,7 +140,7 @@ def main():
             elif choice == "8":
                 handle_report(planner)
             elif choice == "9":
-                # save_data(planner)   
+                FileManager.save_assignments(planner.view_all_assignments())
                 print("Goodbye!")
                 break
             else:

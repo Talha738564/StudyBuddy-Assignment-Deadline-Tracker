@@ -141,15 +141,30 @@ class Assignment(ABC):
             f"Progress: {self.progress}% \n")
     def to_dict(self):
         return {
-            "Title": self.title, 
-            "Subject": self.subject,
-            "Type": type(self).__name__,
-            "Deadline":  self.deadline.isoformat(),
-            "Urgency": self.calculate_urgency(),
-            "Progress": self.progress,
-            "created_date":self.created_date.isoformat(),
-            "completed_date": self.completed_date.isoformat() if self.progress==100 else None 
+               "title": self.title,
+            "subject": self.subject,
+            "type": type(self).__name__,
+            "deadline": self.deadline.isoformat(),
+            "priority_weight": self.priority_weight,
+            "estimated_hours": self.estimated_hours,
+            "progress": self.progress,
+            "created_date": self.created_date.isoformat() if self.created_date else None,
+            "completed_date": self.completed_date.isoformat() if self.completed_date else None,
         }
+    @classmethod
+    def from_dict(cls,data):
+        obj=cls(data["title"],data["subject"],date.fromisoformat(data["deadline"]))
+        obj._created_date=date.fromisoformat(data["created_date"])
+        obj._progress=data["progress"]
+        obj._completed_date=(date.fromisoformat(data["completed_date"])if data["completed_date"] else None)
+        obj._estimated_hours=data["estimated_hours"]
+        obj._priority_weight=data["priority_weight"]
+        return obj
+    
+
+
+
+
     
          
 
@@ -158,8 +173,8 @@ class Assignment(ABC):
 
 
 class HomeworkAssignment(Assignment):
-    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress,submission_type):
-        super().__init__(title,subject,deadline,priority_weight,estimated_hours,progress)
+    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress,submission_type,created_date,completed_date):
+        super().__init__(title,subject,deadline,priority_weight,estimated_hours,progress,created_date,completed_date)
         self._submission_type=submission_type
     @property
     def submission_type(self):
@@ -187,8 +202,14 @@ class HomeworkAssignment(Assignment):
         return base +f"Submission Type: {self.submission_type}"
     def to_dict(self):
         base=super().to_dict()
-        base["Submission Tpe"]=self.submission_type
+        base["submission_type"]=self.submission_type
         return base
+    @classmethod
+    def from_dict(cls, data):
+        obj= super().from_dict(data)
+        obj.submission_type=data["submission_type"]
+        return obj
+
     
 
 
@@ -197,8 +218,8 @@ class HomeworkAssignment(Assignment):
 
     
 class ProjectAssignment(Assignment):
-    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress,milestones,team_members):
-        super().__init__(title,subject,deadline,priority_weight,estimated_hours,progress)
+    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress,milestones,team_members,created_date,completed_date):
+        super().__init__(title,subject,deadline,priority_weight,estimated_hours,progress,created_date,completed_date)
         self._milestones=milestones
         self._team_members=team_members
     def calculate_urgency(self):
@@ -216,8 +237,14 @@ class ProjectAssignment(Assignment):
         return base+f"Milestones Achieved: {','.join(self.milestones)}\n"+f"Team Members:{",".join(self.team_members)} "
     def to_dict(self):
         base=super().to_dict()
-        base["Milestones"]=self._milestones
+        base["milestones"]=self._milestones
         base["Team Member"]=self._team_members
+    @classmethod
+    def from_dict(cls, data):
+        obj=super().from_dict(data)
+        obj._milestones=data["milestones"]
+        obj._team_members=data["team_members"]
+        return obj        
         
         
 
@@ -227,8 +254,8 @@ class ProjectAssignment(Assignment):
 
 
 class ExamPrep(Assignment):
-    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress,important_topics):
-        super().__init__(title,subject,deadline,priority_weight,estimated_hours,progress)
+    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress,important_topics,created_date,completed_date):
+        super().__init__(title,subject,deadline,priority_weight,estimated_hours,progress,created_date,completed_date)
         self._important_topics=important_topics
     def calculate_urgency(self):
             days_left=self.day_left()
@@ -244,8 +271,12 @@ class ExamPrep(Assignment):
         return base+f"Important Topics: {','.join(self.important_topics)}"
     def to_dict(self):
         base=super().to_dict()
-        base["Important Topics"]=self._important_topics
-        
+        base["important_topics"]=self._important_topics
+    @classmethod
+    def from_dict(cls, data):
+        obj=super().from_dict(data)        
+        obj._important_topics=data["important_topics"]
+        return obj
     
     
     
