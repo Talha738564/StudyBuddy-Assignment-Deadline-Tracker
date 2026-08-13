@@ -246,7 +246,7 @@ class ProjectAssignment(Assignment):
         return (f"[{self.subject}] {self.title} |  {self.deadline_status()}  | Urgency :{self.calculate_urgency()} | {self.progress}% Done | Members: {len(self.team_members)}"  )
     def display_detail(self):
         base=super().display_detail()
-        return base+f"Milestones Achieved: {','.join(self.milestones)}\n"+f"Team Members:{",".join(self.team_members)} "
+        return base+f"Milestones Achieved: {','.join(self.milestones)}\n"+f"Team Members:{','.join(self.team_members)} "
     def to_dict(self):
         base=super().to_dict()
         base["milestones"]=self._milestones
