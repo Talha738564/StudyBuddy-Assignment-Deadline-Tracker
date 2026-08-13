@@ -1,47 +1,16 @@
-Title: Chem_Revision
-Subject: Chem
-Type: ExamPrep
-Deadline: 2026-08-13(Due Today)
-Urgency: inf
-Progress: 50% 
-Important Topics: Stoichiometry,Equilibrium
+[Chem] Chem_Revision | Due Today | Urgency :inf | 100% Done |  Important Topics: 2
 ----------------------------------------
-Title: Math_Homework1
-Subject: Math
-Type: HomeworkAssignment
-Deadline: 2026-08-14(due in 1 days)
-Urgency: 140.0
-Progress: 40% 
-Submission Type: online
+[CS] CS_Project |  due in 7 days  | Urgency :118.57142857142857 | 30% Done | Members: 2
 ----------------------------------------
-Title: CS_Project
-Subject: CS
-Type: ProjectAssignment
-Deadline: 2026-08-20(due in 7 days)
-Urgency: 118.57142857142857
-Progress: 30% 
-Milestones Achieved: Design,Prototype
-Team Members:Alice,Bob 
+[Physics] Physics_Lab | lab-report | due in 2 days  | Urgency :110.0 | 0% Done
 ----------------------------------------
-Title: Physics_Lab
-Subject: Physics
-Type: HomeworkAssignment
-Deadline: 2026-08-15(due in 2 days)
-Urgency: 110.0
-Progress: 0% 
-Submission Type: lab-report
+[Math] Math_Homework1 | online | due in 1 days  | Urgency :80.0 | 100% Done
 ----------------------------------------
-Title: History_Essay
-Subject: History
-Type: HomeworkAssignment
-Deadline: 2026-08-25(due in 12 days)
-Urgency: 57.5
-Progress: 10% 
-Submission Type: paper
+[History] History_Essay | paper | due in 12 days  | Urgency :57.5 | 10% Done
 ----------------------------------------
 <<<<<<<<-------Statistics------->>>>>>>>>
 total : 5
-completed : 0
-pending : 5
-avg_completion_time_days : 0
-completion_rates : {'math': 0.0, 'cs': 0.0, 'chem': 0.0, 'history': 0.0, 'physics': 0.0}
+completed : 2
+pending : 3
+avg_completion_time_days : 7.5
+completion_rates : {'chem': 100.0, 'cs': 0.0, 'physics': 0.0, 'math': 100.0, 'history': 0.0}

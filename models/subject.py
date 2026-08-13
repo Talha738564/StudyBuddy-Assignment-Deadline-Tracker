@@ -30,8 +30,7 @@ class Subject:
         completed=[assignment.display_detail() for assignment in self.assignments if assignment.progress==100]            
         for c in completed:
             print(c)
-        return                    
-        return completed
+        return completed                    
     def update_assignment(self,title,deadline=None,priority_weight=None,estimated_hours=None,progress=None):
         assignment=next((assignment  for assignment in self.assignments if assignment.title == title),None)
         if assignment is None:

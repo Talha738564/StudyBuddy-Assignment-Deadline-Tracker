@@ -6,25 +6,13 @@
     "deadline": "2026-08-13",
     "priority_weight": 70,
     "estimated_hours": 5,
-    "progress": 50,
+    "progress": 100,
     "created_date": "2026-08-01",
-    "completed_date": null,
+    "completed_date": "2026-08-13",
     "important_topics": [
       "Stoichiometry",
       "Equilibrium"
     ]
-  },
-  {
-    "title": "Math_Homework1",
-    "subject": "Math",
-    "type": "HomeworkAssignment",
-    "deadline": "2026-08-14",
-    "priority_weight": 80,
-    "estimated_hours": 3,
-    "progress": 40,
-    "created_date": "2026-08-10",
-    "completed_date": null,
-    "submission_type": "online"
   },
   {
     "title": "CS_Project",
@@ -56,6 +44,18 @@
     "created_date": "2026-08-01",
     "completed_date": null,
     "submission_type": "lab-report"
+  },
+  {
+    "title": "Math_Homework1",
+    "subject": "Math",
+    "type": "HomeworkAssignment",
+    "deadline": "2026-08-14",
+    "priority_weight": 80,
+    "estimated_hours": 3,
+    "progress": 100,
+    "created_date": "2026-08-10",
+    "completed_date": "2026-08-13",
+    "submission_type": "online"
   },
   {
     "title": "History_Essay",
