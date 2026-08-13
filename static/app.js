@@ -32,16 +32,47 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
-    // Build Assignment Card HTML
+  // Build Assignment Card HTML with extra specific details
     function buildCardHtml(item, showActions = false) {
         const uc = getUrgencyConfig(item);
         const tagColor = getSubjectColor(item.subject);
         const deadlineText = item.is_overdue ? 'Overdue!' : `Due in ${item.days_left} days`;
 
+        // Gather assignment type specific details
+        let extraFieldsHtml = '';
+        const pills = [];
+
+        if (item.submission_type && item.submission_type.trim()) {
+            pills.push(`<span><strong>Submission:</strong> ${item.submission_type}</span>`);
+        }
+
+        if (item.milestones) {
+            const ms = Array.isArray(item.milestones) ? item.milestones.join(', ') : item.milestones;
+            if (ms.trim()) pills.push(`<span><strong>Milestones:</strong> ${ms}</span>`);
+        }
+
+        if (item.team_members) {
+            const tm = Array.isArray(item.team_members) ? item.team_members.join(', ') : item.team_members;
+            if (tm.trim()) pills.push(`<span><strong>Team:</strong> ${tm}</span>`);
+        }
+
+        if (item.important_topics) {
+            const top = Array.isArray(item.important_topics) ? item.important_topics.join(', ') : item.important_topics;
+            if (top.trim()) pills.push(`<span><strong>Important Topics:</strong> ${top}</span>`);
+        }
+
+        if (pills.length > 0) {
+            extraFieldsHtml = `
+                <div class="extra-fields-container">
+                    ${pills.map(p => `<div class="extra-pill">${p}</div>`).join('')}
+                </div>
+            `;
+        }
+
         const actionsHtml = showActions ? `
             <div class="actions">
+                <button class="btn-mark" onclick="quickMarkDone('${item.subject}', '${item.title}')">✓ Mark Done</button>
                 <button class="btn-del" onclick="deleteAssignment('${item.subject}', '${item.title}')">Delete</button>
-                <button class="btn-mark" onclick="quickMarkDone('${item.subject}', '${item.title}')">Mark Done</button>
             </div>
         ` : '';
 
@@ -54,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="subject-tag" style="background-color: ${tagColor}">${item.subject}</span>
                         <span style="font-size: 0.85rem; color: #666;">${deadlineText} • Prio: ${item.priority_weight}</span>
                     </div>
+                    ${extraFieldsHtml}
                 </div>
                 ${actionsHtml}
             </div>
@@ -98,25 +130,44 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('all-list').innerHTML = items.length ? items.map(i => buildCardHtml(i, true)).join('') : '<p>No assignments found.</p>';
     }
 
-    async function fetchStatistics() {
-        const res = await fetch('/api/statistics');
-        const stats = await res.json();
-        let ratesHtml = Object.entries(stats.completion_rates).map(([subj, rate]) => {
-            return `<div style="margin-bottom: 1rem;">
-                        <span style="font-weight:600">${subj}</span>
-                        <div style="background: #eee; height: 12px; border-radius: 6px; overflow: hidden; margin-top: 5px;">
-                            <div style="width: ${rate}%; height: 100%; background: var(--accent-indigo);"></div>
-                        </div>
-                    </div>`;
-        }).join('');
+  async function fetchStatistics() {
+    const res = await fetch('/api/statistics');
+    const stats = await res.json();
+    
+    // Your chosen minimalist data grid style:
+    let ratesHtml = Object.entries(stats.completion_rates).map(([subj, rate]) => {
+        const cleanRate = Math.round(rate);
+        const isDone = cleanRate === 100;
+        const color = isDone ? 'var(--signal-mint)' : 'var(--text-ink)';
+        const glow = isDone ? 'text-shadow: 0 0 10px rgba(47, 214, 117, 0.4);' : '';
 
-        document.getElementById('app-content').innerHTML = `
-            <h1 class="section-header">Subject Completion Rates</h1>
-            <div style="background: #fff; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
-                ${ratesHtml || '<p>No subject data yet.</p>'}
+        return `
+            <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                <span style="font-weight: 500; text-transform: capitalize;">${subj}</span>
+                <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: ${color}; ${glow}">
+                    ${cleanRate}%
+                </span>
             </div>
         `;
-    }
+    }).join('');
+
+    // Render the dashboard stats and the new minimalist list
+    document.getElementById('app-content').innerHTML = `
+        <h1 class="section-header">Statistics Overview</h1>
+        
+        <div class="dashboard-grid" style="margin-bottom: 2rem;">
+            <div class="stat-card"><h3>Total Tasks</h3><div class="value">${stats.total}</div></div>
+            <div class="stat-card"><h3>Completed</h3><div class="value">${stats.completed}</div></div>
+            <div class="stat-card"><h3>Pending</h3><div class="value">${stats.pending}</div></div>
+            <div class="stat-card"><h3>Avg Days to Done</h3><div class="value">${stats.avg_completion_time_days.toFixed(1)}</div></div>
+        </div>
+
+        <h2 class="section-header">Subject Completion Rates</h2>
+        <div style="background: #fff; padding: 1.5rem 2rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+            ${ratesHtml || '<p>No subject data yet.</p>'}
+        </div>
+    `;
+}
 
     // ---- Event Listeners & Interactions ----
 
@@ -132,9 +183,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Export Action
+ // Export Action (with Cache-Busting)
     document.getElementById('export-btn').addEventListener('click', () => {
-        window.open('/api/export', '_blank');
+        const timestamp = new Date().getTime(); // Generates a unique number right now
+        window.open(`/api/export?t=${timestamp}`, '_blank');
     });
 
     // Slide-over Handlers

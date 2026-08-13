@@ -46,9 +46,10 @@ class Planner:
         rates={}
         for name,subject in self.subjects.items():
             total=len(subject.assignments)
-            completed=len([ assignment for assignment in subject.assignments if assignment.progress==100])                      
             if total>0:
-                rates[name]=completed/total*100
+                # Sum up the actual progress percentages of all assignments and divide by the total count
+                total_progress = sum([assignment.progress for assignment in subject.assignments])
+                rates[name] = total_progress / total
         return rates
     
     
@@ -72,16 +73,65 @@ class Planner:
             "completion_rates": self.subject_completetion_rates(),
         }
     def export_report(self):
-        with open("reports/study_report.txt","w") as f:
-            for assignment in self.view_all_assignments():
-                try:
-                    f.write(assignment.display_summary() + "\n")
-                except Exception:
-                    f.write(assignment.display_detail() + "\n")
-                f.write("-" * 40 + "\n")
-            f.write("<<<<<<<<-------Statistics------->>>>>>>>>"+"\n")
-            for key,value in self.get_statistics().items():
-                f.write(f"{key} : {value}\n")
+        from datetime import datetime # Local import to fetch the current date and time
+        
+        current_time = datetime.now().strftime("%B %d, %Y at %I:%M %p")
+        stats = self.get_statistics()
+        
+        with open("reports/study_report.txt", "w") as f:
+            # ================= HEADER =================
+            f.write("=" * 60 + "\n")
+            f.write("                 STUDYBUDDY REPORT\n")
+            f.write("=" * 60 + "\n")
+            f.write(f" Generated on: {current_time}\n")
+            f.write("=" * 60 + "\n\n")
+
+            # ============= ALL ASSIGNMENTS =============
+            f.write("--- [ ALL ASSIGNMENTS ] ---\n\n")
+            
+            assignments = self.view_all_assignments()
+            if not assignments:
+                f.write("  No assignments found.\n")
+            else:
+                for idx, assignment in enumerate(assignments, 1):
+                    f.write(f" Task #{idx}\n")
+                    f.write("-" * 40 + "\n")
+                    
+                    try:
+                        f.write(assignment.display_summary() + "\n")
+                    except Exception:
+                        f.write(assignment.display_detail() + "\n")
+                    f.write("\n") # Add a blank line between assignments
+                    
+            # =============== STATISTICS ===============
+            f.write("\n" + "=" * 60 + "\n")
+            f.write("                    STATISTICS\n")
+            f.write("=" * 60 + "\n\n")
+            
+            # Align numbers for a clean, table-like appearance
+            f.write(f"  Total Tasks         : {stats.get('total', 0)}\n")
+            f.write(f"  Completed           : {stats.get('completed', 0)}\n")
+            f.write(f"  Pending             : {stats.get('pending', 0)}\n")
+            
+            # Format average days to 1 decimal place
+            avg_time = stats.get('avg_completion_time_days', 0)
+            f.write(f"  Avg Days to Done    : {avg_time:.1f}\n\n")
+            
+            f.write("  Subject Completion Rates:\n")
+            f.write("  " + "-" * 30 + "\n")
+            
+            rates = stats.get('completion_rates', {})
+            if rates:
+                for subject, rate in rates.items():
+                    # Format the subject text to be 15 characters wide (aligned), and rate to 1 decimal
+                    f.write(f"    - {subject.capitalize():<15} : {rate:.1f}%\n")
+            else:
+                f.write("    No subjects found.\n")
+
+            # ================= FOOTER =================
+            f.write("\n\n" + "=" * 60 + "\n")
+            f.write("              End of StudyBuddy Report\n")
+            f.write("=" * 60 + "\n")
 
 
 

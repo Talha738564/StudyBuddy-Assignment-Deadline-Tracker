@@ -344,3 +344,46 @@ input, select {
         display: none;
     }
 }
+/* ========================================= */
+/* GLOWING MARK DONE BUTTON & EXTRA DETAILS  */
+/* ========================================= */
+
+/* Mint glowing effect for Mark Done button */
+.actions .btn-mark {
+    color: var(--signal-mint) !important;
+    border: 1px solid var(--signal-mint) !important;
+    border-radius: 8px;
+    padding: 0.4rem 0.8rem !important;
+    font-weight: 600;
+    transition: all 0.25 ease-in-out;
+    box-shadow: 0 0 10px rgba(47, 214, 117, 0.35);
+    background: rgba(47, 214, 117, 0.05);
+}
+
+.actions .btn-mark:hover {
+    background: var(--signal-mint) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 18px rgba(47, 214, 117, 0.75);
+    transform: translateY(-1px);
+}
+
+/* Specific assignment info pills (Topics, Milestones, Submission) */
+.extra-fields-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+}
+
+.extra-pill {
+    font-size: 0.78rem;
+    color: var(--text-ink);
+    background: rgba(20, 22, 43, 0.05);
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    line-height: 1.3;
+}
+
+.extra-pill strong {
+    color: var(--accent-indigo);
+}
