@@ -1,0 +1,47 @@
+Title: Chem_Revision
+Subject: Chem
+Type: ExamPrep
+Deadline: 2026-08-13(Due Today)
+Urgency: inf
+Progress: 50% 
+Important Topics: Stoichiometry,Equilibrium
+----------------------------------------
+Title: Math_Homework1
+Subject: Math
+Type: HomeworkAssignment
+Deadline: 2026-08-14(due in 1 days)
+Urgency: 140.0
+Progress: 40% 
+Submission Type: online
+----------------------------------------
+Title: CS_Project
+Subject: CS
+Type: ProjectAssignment
+Deadline: 2026-08-20(due in 7 days)
+Urgency: 118.57142857142857
+Progress: 30% 
+Milestones Achieved: Design,Prototype
+Team Members:Alice,Bob 
+----------------------------------------
+Title: Physics_Lab
+Subject: Physics
+Type: HomeworkAssignment
+Deadline: 2026-08-15(due in 2 days)
+Urgency: 110.0
+Progress: 0% 
+Submission Type: lab-report
+----------------------------------------
+Title: History_Essay
+Subject: History
+Type: HomeworkAssignment
+Deadline: 2026-08-25(due in 12 days)
+Urgency: 57.5
+Progress: 10% 
+Submission Type: paper
+----------------------------------------
+<<<<<<<<-------Statistics------->>>>>>>>>
+total : 5
+completed : 0
+pending : 5
+avg_completion_time_days : 0
+completion_rates : {'math': 0.0, 'cs': 0.0, 'chem': 0.0, 'history': 0.0, 'physics': 0.0}

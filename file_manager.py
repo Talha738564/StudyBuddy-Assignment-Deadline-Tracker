@@ -23,10 +23,11 @@ class FileManager:
             return []
         assignments=[]
         for item in raw_data:
-            cls=Type_name.get(raw_data["type"])
+            cls=Type_name.get(item.get("type"))
             if cls:
+                # delegate deserialization to the class
                 assignments.append(cls.from_dict(item))
-        return assignments                            
+        return assignments
 
 
             

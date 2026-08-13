@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Chem_Revision",
+    "subject": "Chem",
+    "type": "ExamPrep",
+    "deadline": "2026-08-13",
+    "priority_weight": 70,
+    "estimated_hours": 5,
+    "progress": 50,
+    "created_date": "2026-08-01",
+    "completed_date": null,
+    "important_topics": [
+      "Stoichiometry",
+      "Equilibrium"
+    ]
+  },
+  {
+    "title": "Math_Homework1",
+    "subject": "Math",
+    "type": "HomeworkAssignment",
+    "deadline": "2026-08-14",
+    "priority_weight": 80,
+    "estimated_hours": 3,
+    "progress": 40,
+    "created_date": "2026-08-10",
+    "completed_date": null,
+    "submission_type": "online"
+  },
+  {
+    "title": "CS_Project",
+    "subject": "CS",
+    "type": "ProjectAssignment",
+    "deadline": "2026-08-20",
+    "priority_weight": 90,
+    "estimated_hours": 20,
+    "progress": 30,
+    "created_date": "2026-07-20",
+    "completed_date": null,
+    "milestones": [
+      "Design",
+      "Prototype"
+    ],
+    "team_members": [
+      "Alice",
+      "Bob"
+    ]
+  },
+  {
+    "title": "Physics_Lab",
+    "subject": "Physics",
+    "type": "HomeworkAssignment",
+    "deadline": "2026-08-15",
+    "priority_weight": 60,
+    "estimated_hours": 4,
+    "progress": 0,
+    "created_date": "2026-08-01",
+    "completed_date": null,
+    "submission_type": "lab-report"
+  },
+  {
+    "title": "History_Essay",
+    "subject": "History",
+    "type": "HomeworkAssignment",
+    "deadline": "2026-08-25",
+    "priority_weight": 50,
+    "estimated_hours": 6,
+    "progress": 10,
+    "created_date": "2026-08-02",
+    "completed_date": null,
+    "submission_type": "paper"
+  }
+]

@@ -27,8 +27,8 @@ def print_menu():
     9. Exit
     """)
 def handle_add(planner):
-    print("1. Homework\n2. Project\n3. Exep Prep")
-    user_choice=int(input("What type of Assignment: ")).strip()
+    print("1. Homework\n2. Project\n3. Exam Prep")
+    user_choice = int(input("What type of Assignment: ").strip())
     title=input("Title: ")
     subject=input("Subject: ")        
     deadline=input("Deadline: ")        
@@ -51,12 +51,16 @@ def handle_add(planner):
     planner.add_assignment(subject,new_assignment)
     print(f"Added '{title}' to {subject}.")
 def handle_view_all(planner):
-    assignments =planner.view_all_assignments()
+    assignments = planner.view_all_assignments()
     if not assignments:
         print("No assignments yet.")
         return
     for a in assignments:
-        print(a.display_detail())
+        try:
+            print(a.display_summary())
+        except Exception:
+            print(a.display_detail())
+        print('-' * 40)
 def handle_update(planner):
     try:
         subject_name, title = input("Enter Subject Name and Title of Assignment for Update (subject,title): ").split(",", 1)
@@ -97,13 +101,29 @@ def handle_remove(planner):
     removed_assignment=planner.remove_assignment(subject_name,title)
     print(f"Delete '{removed_assignment.title}' from  '{subject_name}'.")
 def handle_focus_list(planner):
-    for a in planner.focus_list():
-        print(a.display_detail())
+    assignments = planner.focus_list()
+    if not assignments:
+        print("No focus assignments.")
+        return
+    for a in assignments:
+        try:
+            print(a.display_summary())
+        except Exception:
+            print(a.display_detail())
+        print('-' * 40)
 def handle_reminders(planner):
-    for a in planner.get_reminder():
-        print(a.display_detail())
-    print("\n<<<<<!!! Alert !!!>>>>>\n")
-    print("Complete These Assignments/Tasks as they will be Overdue in 24 or 48 hours")
+    reminders = planner.get_reminder()
+    if not reminders:
+        print("No upcoming reminders.")
+        return
+    for a in reminders:
+        try:
+            print(a.display_summary())
+        except Exception:
+            print(a.display_detail())
+        print('-' * 40)
+        print("\n<<<<<!!! Alert !!!>>>>\n")
+    print("Complete these assignments/tasks — they will be overdue within 24-48 hours")
 def handle_statistics(planner):
     for key,value in planner.get_statistics().items():
         print(f"{key} : {value}")
@@ -115,7 +135,7 @@ def main():
     planner = Planner()
     loaded_assignments=FileManager.load_assignments() 
     for a in loaded_assignments:
-        planner.add_assignment(a)
+        planner.add_assignment(a.subject, a)
 
 
     while True:

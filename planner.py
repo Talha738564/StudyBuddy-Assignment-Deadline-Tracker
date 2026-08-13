@@ -4,27 +4,34 @@ from exceptions import  SubjectNotFound
 
 class Planner:
     def __init__(self):
+        # map normalized subject name -> Subject instance
         self.subjects={}
+    def _normalize(self, name):
+        return name.strip().lower() if isinstance(name, str) else name
         
     def add_assignment(self,subject_name,assignment):
-        if subject_name not in self.subjects:
-            self.subjects[subject_name]=Subject(subject_name)
-        self.subjects[subject_name].add_assignment(assignment)
+        key = self._normalize(subject_name)
+        if key not in self.subjects:
+            # store the original display name on Subject
+            self.subjects[key]=Subject(subject_name)
+        self.subjects[key].add_assignment(assignment)
     def view_all_assignments(self):
         all_assignments=[]
         for subject in self.subjects.values():
             all_assignments.extend(subject.assignments)
         return sorted(all_assignments,key=lambda a:a.calculate_urgency(), reverse=True)
     def remove_assignment(self,subject_name,assignment):
-        subject = self.subjects.get(subject_name)
+        key = self._normalize(subject_name)
+        subject = self.subjects.get(key)
         if subject is None:
             raise SubjectNotFound(f"No subject named '{subject_name}'")
-        return subject.remove_assignment(assignment) 
+        return subject.remove_assignment(assignment)
     def update_assignment(self, subject_name, title, deadline=None, priority_weight=None, estimated_hours=None, progress=None):
-        subject = self.subjects.get(subject_name)
+        key = self._normalize(subject_name)
+        subject = self.subjects.get(key)
         if subject is None:
             raise SubjectNotFound(f"No subject named '{subject_name}'")
-        return subject.update_assignment(title, deadline, priority_weight, estimated_hours, progress) 
+        return subject.update_assignment(title, deadline, priority_weight, estimated_hours, progress)
     def focus_list(self,n=5):
         all_sorted=self.view_all_assignments()
         return all_sorted[:n]
@@ -67,7 +74,10 @@ class Planner:
     def export_report(self):
         with open("reports/study_report.txt","w") as f:
             for assignment in self.view_all_assignments():
-                f.write(assignment.display_detail())
+                try:
+                    f.write(assignment.display_summary() + "\n")
+                except Exception:
+                    f.write(assignment.display_detail() + "\n")
                 f.write("-" * 40 + "\n")
             f.write("<<<<<<<<-------Statistics------->>>>>>>>>"+"\n")
             for key,value in self.get_statistics().items():

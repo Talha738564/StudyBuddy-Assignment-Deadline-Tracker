@@ -11,15 +11,16 @@ from exceptions import (
 from datetime import  date, datetime 
 
 class Assignment(ABC):
-    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress,created_date,completed_date): 
+    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress,created_date=None,completed_date=None): 
         self.title=title
         self.subject=subject
         self.estimated_hours=estimated_hours
         self.priority_weight=priority_weight
         self.progress=progress
         self.deadline=deadline
-        self.created_date=date.today()
-        self.completed_date = None  
+        # allow callers to pass created/completed dates when reconstructing from storage
+        self.created_date = created_date if created_date is not None else date.today()
+        self.completed_date = completed_date
 
 
 
@@ -153,12 +154,16 @@ class Assignment(ABC):
         }
     @classmethod
     def from_dict(cls,data):
-        obj=cls(data["title"],data["subject"],date.fromisoformat(data["deadline"]))
-        obj._created_date=date.fromisoformat(data["created_date"])
-        obj._progress=data["progress"]
-        obj._completed_date=(date.fromisoformat(data["completed_date"])if data["completed_date"] else None)
-        obj._estimated_hours=data["estimated_hours"]
-        obj._priority_weight=data["priority_weight"]
+        # create an uninitialized instance and set internal attributes
+        obj = cls.__new__(cls)
+        obj._title = data.get("title")
+        obj._subject = data.get("subject")
+        obj._deadline = date.fromisoformat(data.get("deadline")) if data.get("deadline") else None
+        obj._priority_weight = data.get("priority_weight")
+        obj._estimated_hours = data.get("estimated_hours")
+        obj._progress = data.get("progress", 0)
+        obj.created_date = date.fromisoformat(data.get("created_date")) if data.get("created_date") else None
+        obj.completed_date = date.fromisoformat(data.get("completed_date")) if data.get("completed_date") else None
         return obj
     
 
@@ -173,7 +178,7 @@ class Assignment(ABC):
 
 
 class HomeworkAssignment(Assignment):
-    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress,submission_type,created_date,completed_date):
+    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress,submission_type,created_date=None,completed_date=None):
         super().__init__(title,subject,deadline,priority_weight,estimated_hours,progress,created_date,completed_date)
         self._submission_type=submission_type
     @property
@@ -218,10 +223,17 @@ class HomeworkAssignment(Assignment):
 
     
 class ProjectAssignment(Assignment):
-    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress,milestones,team_members,created_date,completed_date):
+    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress,milestones,team_members,created_date=None,completed_date=None):
         super().__init__(title,subject,deadline,priority_weight,estimated_hours,progress,created_date,completed_date)
         self._milestones=milestones
         self._team_members=team_members
+    @property
+    def milestones(self):
+        return self._milestones
+
+    @property
+    def team_members(self):
+        return self._team_members
     def calculate_urgency(self):
             days_left=self.day_left()
             if days_left<=0:
@@ -238,7 +250,8 @@ class ProjectAssignment(Assignment):
     def to_dict(self):
         base=super().to_dict()
         base["milestones"]=self._milestones
-        base["Team Member"]=self._team_members
+        base["team_members"]=self._team_members
+        return base
     @classmethod
     def from_dict(cls, data):
         obj=super().from_dict(data)
@@ -254,9 +267,19 @@ class ProjectAssignment(Assignment):
 
 
 class ExamPrep(Assignment):
-    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress,important_topics,created_date,completed_date):
+    def __init__(self,title,subject,deadline,priority_weight,estimated_hours,progress,important_topics,created_date=None,completed_date=None):
         super().__init__(title,subject,deadline,priority_weight,estimated_hours,progress,created_date,completed_date)
         self._important_topics=important_topics
+    @property
+    def important_topics(self):
+        return self._important_topics
+
+    @important_topics.setter
+    def important_topics(self, value):
+        if not isinstance(value, (list, tuple)) and value is not None:
+            raise InvalidType("important_topics must be a list or tuple of topics")
+        # normalize to list for consistent behavior
+        self._important_topics = list(value) if value is not None else []
     def calculate_urgency(self):
             days_left=self.day_left()
             if days_left<=0:
@@ -272,6 +295,7 @@ class ExamPrep(Assignment):
     def to_dict(self):
         base=super().to_dict()
         base["important_topics"]=self._important_topics
+        return base
     @classmethod
     def from_dict(cls, data):
         obj=super().from_dict(data)        

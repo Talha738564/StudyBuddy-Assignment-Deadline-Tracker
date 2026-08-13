@@ -16,7 +16,7 @@ class Subject:
         for assignment in self.assignments:
             if assignment.title==title:
                 self.assignments.remove(assignment)
-                return
+                return assignment
         raise AssignmentNotFound(f"No assignment Titled:' {title} ' Found!")             
     def view_all_assignments(self):
         for assignment in self.assignments:
