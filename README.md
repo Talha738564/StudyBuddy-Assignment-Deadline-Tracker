@@ -5,7 +5,7 @@
 ![Python](https://img.shields.io/badge/python-3.12%2B-blue)
 ![Status](https://img.shields.io/badge/status-active--development-brightgreen)
 ![Dependencies](https://img.shields.io/badge/dependencies-none-lightgrey)
-![License](https://img.shields.io/badge/license-unspecified-lightgrey)
+
 
 StudyBuddy is a command-line assignment tracker built to demonstrate solid object-oriented design in Python — abstraction, inheritance, polymorphism, encapsulation via properties, and a custom exception hierarchy — while solving a genuinely useful problem: **what should I work on next?**
 
@@ -312,11 +312,7 @@ Please keep new assignment types consistent with the existing pattern: extend `A
 
 ---
 
-## License
 
-No license file is currently included. Until one is added, all rights are reserved by default — consider adding an [MIT](https://choosealicense.com/licenses/mit/) or similar permissive license if you'd like others to use or contribute to this project.
-
----
 
 ## Author
 
