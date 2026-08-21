@@ -1,3 +1,5 @@
+import os
+
 from models.subject import Subject 
 from exceptions import  SubjectNotFound
 
@@ -72,13 +74,14 @@ class Planner:
             "avg_completion_time_days": avg_completion_time,
             "completion_rates": self.subject_completetion_rates(),
         }
-    def export_report(self):
+    def export_report(self, filepath="reports/study_report.txt"):
         from datetime import datetime # Local import to fetch the current date and time
         
         current_time = datetime.now().strftime("%B %d, %Y at %I:%M %p")
         stats = self.get_statistics()
         
-        with open("reports/study_report.txt", "w") as f:
+        os.makedirs(os.path.dirname(filepath) or ".", exist_ok=True)
+        with open(filepath, "w") as f:
             # ================= HEADER =================
             f.write("=" * 60 + "\n")
             f.write("                 STUDYBUDDY REPORT\n")

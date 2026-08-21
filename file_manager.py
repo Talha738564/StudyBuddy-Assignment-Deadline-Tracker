@@ -7,8 +7,10 @@ Type_name={
 }
 class FileManager:
     @staticmethod
-    def save_assignments(data):
-       with open("data/assignments.json","w") as f:
+    def save_assignments(data, filepath="data/assignments.json"):
+       import os
+       os.makedirs(os.path.dirname(filepath) or ".", exist_ok=True)
+       with open(filepath,"w") as f:
             all_data=[]
             all_data=[a.to_dict() for a in data]
             json.dump(all_data,f,indent=2)

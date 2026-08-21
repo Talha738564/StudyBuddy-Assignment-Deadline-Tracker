@@ -189,6 +189,17 @@ document.addEventListener('DOMContentLoaded', () => {
         window.open(`/api/export?t=${timestamp}`, '_blank');
     });
 
+    document.querySelector('[data-logout-link]').addEventListener('click', (event) => {
+        if (!window.confirm('Log out of StudyBuddy?')) {
+            event.preventDefault();
+            return;
+        }
+        event.preventDefault();
+        const logoutLink = event.currentTarget;
+        logoutLink.classList.add('is-logging-out');
+        window.setTimeout(() => { window.location.href = logoutLink.href; }, 260);
+    });
+
     // Slide-over Handlers
     const slideOver = document.getElementById('slide-over');
     const backdrop = document.getElementById('backdrop');

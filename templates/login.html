@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in | StudyBuddy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="auth-page auth-login">
+    <main class="auth-card auth-panel">
+        <div class="auth-mark"><span>StudyBuddy</span></div>
+        <p class="auth-kicker">Welcome back</p>
+        <h1>Pick up your momentum.</h1>
+        <p class="auth-subtitle">Log in to keep your deadlines moving.</p>
+        <form method="post" novalidate>
+            <label for="username">Username</label>
+            <input id="username" name="username" value="{{ username }}" autocomplete="username" required>
+            <label for="password">Password</label>
+            <div class="password-field">
+                <input id="password" name="password" type="password" autocomplete="current-password" required>
+                <button class="password-toggle" type="button" data-password-toggle="password" aria-label="Show password" aria-pressed="false"><span class="eye-icon" aria-hidden="true"></span></button>
+            </div>
+            {% if error %}<p class="auth-error">{{ error }}</p>{% endif %}
+            <button class="auth-submit" type="submit">Log in</button>
+        </form>
+        <p class="auth-switch">New here? <a class="auth-transition-link" href="{{ url_for('signup') }}">Sign up</a></p>
+    </main>
+    <script src="{{ url_for('static', filename='auth.js') }}"></script>
+</body>
+</html>
