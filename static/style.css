@@ -100,7 +100,8 @@ body.auth-page::after { display: none; }
 }
 
 @media (max-width: 480px) {
-    .auth-page { place-items: start center; padding: .75rem; }
+    body.auth-page { display: grid; place-items: center; }
+    .auth-page { place-items: center; padding: .75rem; }
     .auth-card { border-radius: 18px; padding: 1.35rem 1rem 1.25rem; }
     .auth-mark { margin-bottom: 1.75rem; }
     .auth-subtitle { margin-bottom: 1.35rem; }
@@ -468,6 +469,7 @@ input, select {
 
     /* Redesign Assignment Cards for smaller screens */
     .assignment-card {
+        flex-direction: column;
         align-items: flex-start;
         position: relative;
         padding: 1.25rem;
