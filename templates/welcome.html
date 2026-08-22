@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyBuddy | Keep your momentum</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="landing-page">
+    <header class="landing-header">
+        <a class="landing-brand" href="{{ url_for('welcome') }}" aria-label="StudyBuddy home">
+            <span class="brand-mark" aria-hidden="true">+</span>
+            <span>StudyBuddy</span>
+        </a>
+        <nav class="landing-nav" aria-label="Main navigation">
+            <a href="#how-it-works">How it works</a>
+            <a href="#focus">Focus better</a>
+            <a class="landing-login" href="{{ url_for('login') }}">Log in</a>
+            <a class="landing-nav-cta" href="{{ url_for('signup') }}">Get started <span aria-hidden="true">&#8594;</span></a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="landing-hero" aria-labelledby="hero-title">
+            <div class="hero-copy">
+                <p class="hero-eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> Your calmer study rhythm</p>
+                <h1 id="hero-title">Make every deadline feel <em>closer.</em></h1>
+                <p class="hero-description">StudyBuddy turns a noisy list of assignments into a clear plan for today, so you can spend less time catching up and more time moving forward.</p>
+                <div class="hero-actions">
+                    <a class="hero-primary" href="{{ url_for('signup') }}">Build your plan <span aria-hidden="true">&#8594;</span></a>
+                    <a class="hero-secondary" href="#how-it-works"><span class="play-icon" aria-hidden="true">&#9654;</span> See how it works</a>
+                </div>
+                <div class="hero-proof"><span class="proof-avatars" aria-hidden="true"><i></i><i></i><i></i></span><span>Made for students who want momentum, not mayhem.</span></div>
+            </div>
+
+            <div class="planner-stage" id="focus" role="img" aria-label="StudyBuddy dashboard preview showing today's assignments and progress">
+                <div class="stage-glow"></div>
+                <div class="planner-window">
+                    <div class="planner-topbar"><span class="window-dots"><i></i><i></i><i></i></span><span class="planner-date">Tuesday, 14 May</span><span class="planner-menu">•••</span></div>
+                    <div class="planner-body">
+                        <div class="planner-sidebar"><span class="mini-logo">+</span><span class="mini-line active"></span><span class="mini-line"></span><span class="mini-line"></span><span class="mini-line short"></span><span class="mini-bottom"></span></div>
+                        <div class="planner-content">
+                            <div class="planner-heading"><div><p>Good morning, Alex</p><h2>Today's focus</h2></div><span class="focus-score">72%</span></div>
+                            <div class="progress-track"><span></span></div>
+                            <div class="task-stack">
+                                <div class="preview-task urgent"><span class="task-check"></span><div><strong>Biology lab report</strong><small>Due today · 2 hours</small></div><b>Now</b></div>
+                                <div class="preview-task"><span class="task-check done"></span><div><strong>History reading notes</strong><small>Due tomorrow · 45 min</small></div><b>45m</b></div>
+                                <div class="preview-task"><span class="task-check"></span><div><strong>Design project outline</strong><small>Due Friday · 1.5 hours</small></div><b>Later</b></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="floating-note"><span class="note-icon" aria-hidden="true">&#10003;</span><div><strong>One step at a time</strong><small>3 tasks in your rhythm</small></div></div>
+            </div>
+        </section>
+
+        <section class="landing-strip" id="how-it-works" aria-label="StudyBuddy benefits">
+            <div><span class="strip-number">01</span><h2>See the next right thing</h2><p>Prioritized assignments make the first move obvious.</p></div>
+            <div><span class="strip-number">02</span><h2>Build steady momentum</h2><p>Track progress without adding more noise.</p></div>
+            <div><span class="strip-number">03</span><h2>Finish with room to breathe</h2><p>Deadlines stay visible, manageable, and yours.</p></div>
+        </section>
+    </main>
+
+    <footer class="landing-footer"><span>&copy; 2026 StudyBuddy</span><span>Designed for your next good study session.</span><a href="{{ url_for('login') }}">Open your planner <span aria-hidden="true">&#8599;</span></a></footer>
+</body>
+</html>

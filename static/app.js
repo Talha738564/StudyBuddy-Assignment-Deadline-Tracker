@@ -12,6 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return subjectColorMap[normalized];
     }
 
+    function getSubjectTextColor(backgroundColor) {
+        const red = parseInt(backgroundColor.slice(1, 3), 16);
+        const green = parseInt(backgroundColor.slice(3, 5), 16);
+        const blue = parseInt(backgroundColor.slice(5, 7), 16);
+        const luminance = (red * 299 + green * 587 + blue * 114) / 1000;
+        return luminance > 155 ? '#14162B' : '#FFFFFF';
+    }
+
     // Determine Urgency Details (Ring Color & Shadow Class)
     function getUrgencyConfig(item) {
         if (item.is_overdue || item.days_left <= 2) {
@@ -26,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create the signature momentum ring element
     function createMomentumRing(progress, color) {
         return `
-            <div class="momentum-ring" style="background: conic-gradient(${color} ${progress}%, #eee 0);">
+            <div class="momentum-ring" style="background: conic-gradient(${color} ${progress}%, rgba(255, 255, 255, 0.16) 0);">
                 <span>${progress}%</span>
             </div>
         `;
@@ -82,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="card-details">
                     <h3>${item.title}</h3>
                     <div>
-                        <span class="subject-tag" style="background-color: ${tagColor}">${item.subject}</span>
+                        <span class="subject-tag" style="background-color: ${tagColor}; color: ${getSubjectTextColor(tagColor)}">${item.subject}</span>
                         <span style="font-size: 0.85rem; color: #666;">${deadlineText} • Prio: ${item.priority_weight}</span>
                     </div>
                     ${extraFieldsHtml}
@@ -138,13 +146,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let ratesHtml = Object.entries(stats.completion_rates).map(([subj, rate]) => {
         const cleanRate = Math.round(rate);
         const isDone = cleanRate === 100;
-        const color = isDone ? 'var(--signal-mint)' : 'var(--text-ink)';
+        const color = isDone ? 'var(--signal-mint)' : 'var(--text-light)';
         const glow = isDone ? 'text-shadow: 0 0 10px rgba(47, 214, 117, 0.4);' : '';
 
         return `
-            <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
-                <span style="font-weight: 500; text-transform: capitalize;">${subj}</span>
-                <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: ${color}; ${glow}">
+            <div class="completion-rate-row">
+                <span class="completion-rate-subject">${subj}</span>
+                <span class="completion-rate-value" style="color: ${color}; ${glow}">
                     ${cleanRate}%
                 </span>
             </div>
@@ -163,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
 
         <h2 class="section-header">Subject Completion Rates</h2>
-        <div style="background: #fff; padding: 1.5rem 2rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+        <div class="completion-rates-card">
             ${ratesHtml || '<p>No subject data yet.</p>'}
         </div>
     `;
